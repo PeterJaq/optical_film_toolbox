@@ -22,7 +22,7 @@ def cal_target(target_config, WLstep, WLrange):
 
     return target 
 
-def film_weight(weight_config, WLstep=1, WLrange=[280, 1200]):
+def film_weight(weight_config, WLstep=1, WLrange=[280, 1000]):
     weight = dict()
 
     for i in ['Absorption', 'Transmission', 'Reflection']:

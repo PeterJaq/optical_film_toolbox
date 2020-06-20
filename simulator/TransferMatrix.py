@@ -9,6 +9,8 @@ sys.path.append("/home/peterjaq/project/optical-film-maker/")
 print(sys.path)
 
 import numpy as np
+import matplotlib
+# matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
