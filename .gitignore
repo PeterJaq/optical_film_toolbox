@@ -129,3 +129,8 @@ dmypy.json
 .pyre/
 
 3rdRepo/
+
+logs/
+playground/
+.vscode/
+.vscode/settings.json

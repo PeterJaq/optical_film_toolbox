@@ -5,7 +5,7 @@
 import os 
 import sys
 os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-sys.path.append("/home/peterjaq/project/optical-film-maker/")
+sys.path.append("F:/Project/optical_film_toolbox/")
 print(sys.path)
 
 import numpy as np
@@ -51,9 +51,10 @@ class OpticalModeling(object):
         self.WL      = np.arange(WLrange[0], WLrange[1], WLstep)
         self.WLstep  = WLstep
         self.posstep = posstep
+        self.plotWL  = [450, 600, 750, 900]
         # positions to evaluate field
 
-        self.AM15 = self.LoadSolar("./db/SolarAM15.csv")  # load/reshape into desired WLs
+        self.AM15 = self.LoadSolar("F:/Project/optical_film_toolbox/db/SolarAM15.csv")  # load/reshape into desired WLs
         self.nk   = self.load_nk(materials=self.material)
 
         # dp for calculating transfer matrices (used in CalE() )
@@ -122,7 +123,7 @@ class OpticalModeling(object):
         1. The electric field in the device stack (self.E)
         2. The reflection (self.Reflection)
         """
-
+        # print(self.nk.keys(), self.layers)
         subnk = self.nk[self.layers[0]]
 
         T_glass = abs(4 * 1 * subnk / (1 + subnk)**2)
@@ -237,8 +238,11 @@ class OpticalModeling(object):
             self.Absorption[mlabel] = (
                 np.sum(self.AbsRate[posind[0]:posind[1]], 0) *
                 self.posstep * 1e-7)
-        self.Transmission = 1.0 - np.sum(self.Absorption, 1) - self.Reflection
-        self.total_Absorption = np.sum(self.Absorption, 1)
+        # print(self.Absorption.head())
+        self.total_Absorption = self.Absorption.apply(lambda x: x.sum(), axis=1)
+        # print(self.total_Absorption)
+        self.Transmission = 1.0 - self.total_Absorption - self.Reflection
+        # self.total_Absorption = np.sum(self.Absorption, 1)
 
         return None
 
@@ -322,7 +326,7 @@ class OpticalModeling(object):
             max_wl = min(max(mat_data['wl']), max_wl)
             min_wl = max(min(mat_data['wl']), min_wl)
 
-        rtn_nk["Air"] = np.array([1] * len(self.WL))
+        rtn_nk["Air"] = np.array([1 + 0j] * len(self.WL))
 
         for mat in self.layers:
             if mat not in rtn_nk:

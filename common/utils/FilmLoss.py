@@ -1,7 +1,7 @@
 import numpy as np 
 import pandas as pd 
 
-def film_loss(aim, weight, observation, average=False, debug=False, betterfgood=True):
+def film_loss(aim, weight, observation, average=False, debug=True, betterfgood=True):
     # Calculate film loss 
     
     loss_absorbation   = np.mean(weight['Absorption'] * (abs(aim['Absorption'] - observation[0])))
@@ -19,9 +19,9 @@ def film_loss(aim, weight, observation, average=False, debug=False, betterfgood=
     if average:
         if betterfgood:
         #print(np.sum([loss_absorbation, loss_transimission, loss_refraction]))
-            return 1 / np.sum([loss_absorbation, loss_transimission, loss_refraction])
+            return 1 / np.sum([loss_absorbation, loss_transimission, loss_refraction]), loss_absorbation, loss_transimission, loss_refraction
         else:
-            return np.sum([loss_absorbation, loss_transimission, loss_refraction])
+            return np.sum([loss_absorbation, loss_transimission, loss_refraction]), loss_absorbation, loss_transimission, loss_refraction
     else:
         return loss_absorbation, loss_transimission, loss_refraction
 
