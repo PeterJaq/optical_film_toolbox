@@ -1,0 +1,15 @@
+main, SiO2, Lemarchand
+main, Ag, Werner
+main, Al, McPeak
+main, AlAs, Rakic
+main, GaAs, Rakic
+main, InAs, Adachi
+main, Au, Werner
+main, Bi, Werner
+main, CsBr, Querry
+main, KBr, Li
+main, LiBr, Li
+main, NaBr, Li
+main, RbBr, Li
+main, C, Weber
+main, C, Peter
