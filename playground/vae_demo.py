@@ -16,7 +16,6 @@ from common.utils.tsne_utils import plot, MACOSKO_COLORS
 # from models.CVAE import CVAE
 
 from models.fcn_ae import FullyConnectedAutoEncoder
-
 from common.refractive import RefractiveIndex
 
 save_model = True
@@ -96,8 +95,6 @@ for epoch in range(num_epochs):
         if step%100==0:
             print(epoch,step,float(rec_loss))
 
-# if save_model is True:
-#   model.save('../models_dump/autoencoder-260-1000.h5')
 
 if show_result is True:
   for test in test_dataset:
