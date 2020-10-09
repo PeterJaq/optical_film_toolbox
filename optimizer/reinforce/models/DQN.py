@@ -12,10 +12,11 @@ gym: 0.7.3
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 np.random.seed(1)
 tf.set_random_seed(1)
+tf.disable_eager_execution()
 
 
 # Deep Q Network off-policy
@@ -125,8 +126,9 @@ class DeepQNetwork:
 
     def choose_action(self, observation):
         # to have batch dimension when feed into tf placeholder
-        observation = observation[np.newaxis, :]
-
+        # observation = observation[np.newaxis, :]
+        observation = np.array(observation).reshape((1,-1))
+        
         if np.random.uniform() < self.epsilon:
             # forward feed the observation and get q value for every actions
             actions_value = self.sess.run(self.q_eval, feed_dict={self.s: observation})

@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-@author: C. Marcus Chuang, 2015
+@author: anqing Jiang, 2018
 """
 import os 
 import sys
-os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-sys.path.append("F:/Project/optical_film_toolbox/")
-print(sys.path)
 
 import numpy as np
 import matplotlib
@@ -54,7 +51,7 @@ class OpticalModeling(object):
         self.plotWL  = [450, 600, 750, 900]
         # positions to evaluate field
 
-        self.AM15 = self.LoadSolar("F:/Project/optical_film_toolbox/db/SolarAM15.csv")  # load/reshape into desired WLs
+        self.AM15 = self.LoadSolar("/home/peterjaq/Project/optical_film_toolbox/db/SolarAM15.csv")  # load/reshape into desired WLs
         self.nk   = self.load_nk(materials=self.material)
 
         # dp for calculating transfer matrices (used in CalE() )
