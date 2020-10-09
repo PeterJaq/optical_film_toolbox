@@ -7,6 +7,7 @@ import yaml
 import numpy as np
 import pandas as pd
 import math
+
 from tqdm import tqdm 
 
 from scipy import interpolate
@@ -202,7 +203,7 @@ class MaterialLoader:
                 wl, n, k= self.load_material_parameter(material_path)
             
                 self.success_material.append(material_name)
-                yield wl, n, k
+                yield material_name, [wl, n, k]
 
             except ValueError as ve:
 
@@ -244,12 +245,6 @@ class MaterialLoader:
             for data in datas:
                 data = data.strip().split(' ')
                 if len(data) == 3:
-                    # if float(data[0])*1000 == 1460.0:
-                    #     print(" ")
-                    #     pass 
-                    if float(data[0])*1000 in wl:
-                        print("Drop same wavelength value!")
-                    elif float(data[0]) >= self.default_wavelength_range[0] and float(data[0]) <= self.default_wavelength_range[1]:
                         wl.append(float(data[0]) * 1000)
                         n.append(float(data[1]))
                         k.append(float(data[2]))
@@ -259,26 +254,24 @@ class MaterialLoader:
 
             for data in datas:
                 data = data.split(' ')
-                if len(data) == 2 and (float(data[0]) >= self.default_wavelength_range[0] and float(data[0]) <= self.default_wavelength_range[1]):
-                    wl.append(float(data[0]) * 1000)
-                    n.append(float(data[1]))
-                    k.append(0)
+                wl.append(float(data[0]) * 1000)
+                n.append(float(data[1]))
+                k.append(0)
         
         elif datas_type == 'tabulated k':
             datas = datas['DATA'][0]['data'].split('\n')
 
             for data in datas:
                 data = data.split(' ')
-                if len(data) == 2 and (float(data[0]) >= self.default_wavelength_range[0] and float(data[0]) <= self.default_wavelength_range[1]):
-                    wl.append(float(data[0]) * 1000)
-                    n.append(0)
-                    k.append(float(data[1]))
+                wl.append(float(data[0]) * 1000)
+                n.append(0)
+                k.append(float(data[1]))
 
         elif datas_type.split(' ')[0] == 'formula':
             coefficients = list(map(float, datas['DATA'][0]['coefficients'].split(' ')))
             wavelength_range = list(map(float, datas['DATA'][0]['wavelength_range'].split(' ')))
-
-            wl_tmp = list(np.arange(max(wavelength_range[0],self.default_wavelength_range[0]), min(wavelength_range[1], self.default_wavelength_range[1]), 0.001))
+            print(wavelength_range)
+            wl_tmp = list(np.arange(wavelength_range), 0.001)
             wl = [1000*w for w in wl_tmp]
 
             if datas_type == 'formula 1':
@@ -297,8 +290,7 @@ class MaterialLoader:
             coefficients = list(map(float, datas['DATA'][0]['coefficients'].split(' ')))
             wavelength_range = list(map(float, datas['DATA'][0]['wavelength_range'].split(' ')))
 
-        
-        fwl = np.arange(min(wl), max(wl), 1)
+        fwl = np.arange(math.ceil(min(wl)), int(max(wl)), 1)
 
         fn = interpolate.interp1d(np.array(wl), np.array(n), kind='quadratic')
         fk = interpolate.interp1d(np.array(wl), np.array(k), kind='quadratic')
@@ -558,7 +550,7 @@ if __name__ == "__main__":
 
 
     for sample in ml.load_total_material_generator():
-        pass 
+        print(sample.keys())
 
     print("Success Load %s materials." % len(ml.success_material))
     print("Failed Load %s materials." % len(ml.failed_material))
